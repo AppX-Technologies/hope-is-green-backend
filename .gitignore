@@ -1,0 +1,9 @@
+node_modules
+.env
+package-lock.json
+yarn.lock
+k8s/backend.yaml
+backend/contacts.js
+backend/seedContacts.js
+backend/users.js
+.DS_Store
