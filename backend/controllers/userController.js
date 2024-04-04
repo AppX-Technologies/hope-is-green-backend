@@ -11,7 +11,7 @@ const {
   deleteUserService,
   getUsersService,
   getUserByKeyService,
-  checkCanAccessContactEmailService
+  checkCanAccessContactEmailService,
 } = require("../services/userServices");
 
 const { sanitize } = require("../utils/responseSanitizer");
@@ -22,7 +22,7 @@ const {
 const createUser = asyncHandler(async (req, res) =>
   res
     .status(201)
-    .json(sanitize(await createUserService(req.body), "User", req.user.role))
+    .json(sanitize(await createUserService(req.body), "User", req.user.roles))
 );
 
 const generateRegistrationOtp = asyncHandler(async (req, res) =>
@@ -32,7 +32,7 @@ const generateRegistrationOtp = asyncHandler(async (req, res) =>
 const getUsers = asyncHandler(async (req, res) => {
   const userResult = await getUsersService(req.body);
   userResult.results = userResult.results.map((user) =>
-    sanitize(user, "User", req.user.role)
+    sanitize(user, "User", req.user.roles)
   );
   res.status(200).json(userResult);
 });
@@ -45,9 +45,8 @@ const checkCanAccessContactEmail = asyncHandler(async (req, res) => {
   res.status(200).json(await checkCanAccessContactEmailService(req.body));
 });
 
-
 const getMe = asyncHandler(async (req, res) =>
-  res.status(200).json(sanitize(req.user, "User", req.user.role))
+  res.status(200).json(sanitize(req.user, "User", req.user.roles))
 );
 
 const getUserByResetPasswordKey = asyncHandler(async (req, res) => {
@@ -98,7 +97,11 @@ const updateUserDetails = asyncHandler(async (req, res) =>
   res
     .status(200)
     .json(
-      sanitize(await updateUserDetailsService(req.body), "User", req.user.role)
+      sanitize(
+        await updateUserDetailsService(req.body, req.user),
+        "User",
+        req.user.roles
+      )
     )
 );
 
@@ -114,7 +117,7 @@ const changePassword = asyncHandler(async (req, res) =>
         ...req.body,
       }),
       "User",
-      req.user.role
+      req.user.roles
     )
   )
 );

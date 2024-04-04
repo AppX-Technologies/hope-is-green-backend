@@ -311,7 +311,7 @@ const deleteUserService = asyncHandler(
       throw new HttpError("User with the given email was not found.");
     }
 
-    if (user.role === ROLES.ADMIN) {
+    if (user.roles.includes(ROLES.ADMIN)) {
       const numberOfAdmins = await User.count({ role: ROLES.ADMIN });
 
       if (numberOfAdmins === 1) {
