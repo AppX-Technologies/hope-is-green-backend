@@ -43,6 +43,13 @@ const updateClubStatusService = asyncHandler(async (clubId, status, user) => {
   // Implement
 });
 
+// Update club status
+const updateUserApprovalStatusService = asyncHandler(
+  async (clubId, userId, action, user) => {
+    // Implement
+  }
+);
+
 // Delete a club
 const deleteClubService = asyncHandler(async (clubId, user) => {
   // Implement
@@ -61,6 +68,7 @@ module.exports = {
   addEntryFeeRecordService,
   addClubFeePaymentRecordService,
   updateClubStatusService,
+  updateUserApprovalStatusService,
   deleteClubService,
   listAllClubsService,
 };

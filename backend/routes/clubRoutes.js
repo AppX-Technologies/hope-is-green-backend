@@ -9,6 +9,7 @@ const {
   addClubFeePaymentRecord,
   deleteClub,
   updateClubStatus,
+  updateUserApprovalStatus,
   listAllClubs,
 } = require("../controllers/clubController");
 const { protect, authorize } = require("../middleware/authMiddleware");
@@ -67,5 +68,17 @@ router
 
 // Delete a club - Restricted to Site Admins only
 router.route("/:clubId").delete(protect([ROLES.ADMIN]), deleteClub);
+
+router
+  .route("/:clubId/approvals/:userId")
+  .put(
+    protect([
+      ROLES.CLUB_MODERATOR,
+      ROLES.CLUB_OWNER,
+      ROLES.SITE_MODERATOR,
+      ROLES.ADMIN,
+    ]),
+    updateUserApprovalStatus
+  );
 
 module.exports = router;

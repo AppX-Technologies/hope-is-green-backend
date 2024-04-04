@@ -34,6 +34,11 @@ const userSchema = mongoose.Schema(
       },
     ],
     club: { type: mongoose.SchemaTypes.ObjectId, ref: "Club" },
+    clubApprovalStatus: {
+      type: String,
+      enum: ["Pending", "Approved", "Denied"],
+      default: "Pending",
+    },
     active: {
       type: Boolean,
       default: false,

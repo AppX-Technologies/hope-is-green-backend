@@ -7,6 +7,7 @@ const {
   addEntryFeeRecordService,
   addClubFeePaymentRecordService,
   updateClubStatusService,
+  updateUserApprovalStatusService,
   deleteClubService,
   listAllClubsService,
 } = require("../services/clubServices");
@@ -97,6 +98,21 @@ const updateClubStatus = asyncHandler(async (req, res) => {
   res.status(200).json(updatedClub);
 });
 
+// Update user approval status for club
+const updateUserApprovalStatus = asyncHandler(async (req, res) => {
+  const updatedClub = await updateUserApprovalStatusService(
+    req.params.clubId,
+    req.params.userId,
+    req.body.action,
+    req.user
+  );
+  if (!updatedClub) {
+    res.status(404).json({ message: "Club not found or permission denied" });
+    return;
+  }
+  res.status(200).json(updatedClub);
+});
+
 // Delete a club
 const deleteClub = asyncHandler(async (req, res) => {
   const result = await deleteClubService(req.params.clubId, req.user);
@@ -121,6 +137,7 @@ module.exports = {
   addEntryFeeRecord,
   addClubFeePaymentRecord,
   updateClubStatus,
+  updateUserApprovalStatus,
   deleteClub,
   listAllClubs,
 };
