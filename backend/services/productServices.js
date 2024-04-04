@@ -234,16 +234,18 @@ const deleteProductService = async (productId, user) => {
   return { message: "Product deleted successfully" };
 };
 
-// Updates the price of a specific product and returns the updated product
-const updateProductPriceService = async (productId, newPrice, userId) => {
-  // Step 1: Find the product by productId
-  const product = await Product.findById(productId).populate("ownerClub");
+const updateProductUnitPricesService = async (
+  productId,
+  unitPricesToUpdate,
+  userId
+) => {
+  const product = await Product.findById(productId);
   if (!product) {
     throw new Error("Product not found");
   }
 
-  // Assuming user details are fetched from the database, including their roles and club
-  const user = await User.findById(userId).populate("roles club");
+  // Assuming user details are fetched and checked for permissions as before
+  const user = await User.findById(userId);
   if (!user) {
     throw new Error("User not found");
   }
@@ -277,14 +279,46 @@ const updateProductPriceService = async (productId, newPrice, userId) => {
     );
   }
 
-  // Step 3: If the user has permission, update the price and record the price change
-  product.price = newPrice;
+  // Update logic: Iterate over each input to determine action (add, update, remove)
+  unitPricesToUpdate.forEach(({ action, grams, price }) => {
+    switch (action) {
+      case "add":
+        // Add new unit price
+        product.unitPrices.push({ grams, price });
+        break;
+      case "update":
+        // Find and update existing unit price
+        const indexToUpdate = product.unitPrices.findIndex(
+          (up) => up.grams === grams
+        );
+        if (indexToUpdate !== -1) {
+          product.unitPrices[indexToUpdate].price = price;
+        } else {
+          // Handle the case where the unit price doesn't exist
+          throw new Error(
+            `Unit price for ${grams} grams not found for update.`
+          );
+        }
+        break;
+      case "remove":
+        // Remove unit price
+        product.unitPrices = product.unitPrices.filter(
+          (up) => up.grams !== grams
+        );
+        break;
+      default:
+        throw new Error("Invalid action specified.");
+    }
+  });
+
+  // Record the change in the price history
+  // This records the entire operation as a single entry for simplicity
+  // You might want to adjust this logic based on how you wish to track history
   product.priceHistory.push({
-    price: newPrice,
+    unitPrices: unitPricesToUpdate,
     user: userId,
   });
 
-  // Step 4: Save the updated product
   await product.save();
 
   return product;
@@ -372,6 +406,6 @@ module.exports = {
   createProductService,
   updateProductService,
   deleteProductService,
-  updateProductPriceService,
+  updateProductUnitPricesService,
   addStockTransactionService,
 };

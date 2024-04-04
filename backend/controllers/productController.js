@@ -5,7 +5,7 @@ const {
   createProductService,
   updateProductService,
   deleteProductService,
-  updateProductPriceService,
+  updateProductUnitPricesService,
   addStockTransactionService,
 } = require("../services/productServices");
 
@@ -43,13 +43,20 @@ const deleteProduct = asyncHandler(async (req, res) => {
   res.status(204).send();
 });
 
-// Update the price of a specific product
 const updateProductPrice = asyncHandler(async (req, res) => {
-  const updatedProduct = await updateProductPriceService(
-    req.params.productId,
-    req.body.price,
-    req.user
+  // Extract the productId from the request parameters
+  const { productId } = req.params;
+  const unitPricesToUpdate = req.body.unitPrices;
+  const userId = req.user._id; // Adjust according to how the user ID is stored/accessed
+
+  // Call the updated service function with the correct arguments
+  const updatedProduct = await updateProductUnitPricesService(
+    productId,
+    unitPricesToUpdate,
+    userId
   );
+
+  // Respond with the updated product
   res.status(200).json(updatedProduct);
 });
 
