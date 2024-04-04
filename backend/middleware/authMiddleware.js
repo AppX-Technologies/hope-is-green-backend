@@ -31,7 +31,10 @@ const protect = (allowedRoles) => {
       req.user = user.toObject();
 
       // If role checking is enabled and the user's role is not in the allowed roles, throw an error
-      if (shouldPerformRoleCheck && !allowedRoles.includes(req.user.role)) {
+      if (
+        shouldPerformRoleCheck &&
+        !allowedRoles.some((r) => req.user.roles.includes(r))
+      ) {
         res.status(403);
         throw new Error(
           `Only ${allowedRoles.join(", ")} can perform this action.`
