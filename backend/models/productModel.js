@@ -30,7 +30,7 @@ const productSchema = new Schema({
   priceHistory: [priceHistorySchema], // Track price changes over time
   stock: { type: Number, required: true, min: 0 }, // Current stock
   stockTransactions: [stockTransactionSchema], // Track stock changes
-  isHouseProduct: { type: Boolean, default: false },
+  isHouseProduct: { type: Boolean, default: false }, //if false product belongs to a club otherwise superadmin
   ownerClub: { type: Schema.Types.ObjectId, ref: "Club" },
   listed: { type: Boolean, default: false },
 });
