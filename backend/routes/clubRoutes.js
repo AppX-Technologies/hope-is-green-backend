@@ -18,12 +18,12 @@ const { ROLES } = require("../config/general");
 // List all clubs - Visible to Site Moderator and Admins only
 router
   .route("/")
-  .get(protect, authorize(ROLES.ADMIN, ROLES.SITE_MODERATOR), listAllClubs);
+  .get(protect([ROLES.ADMIN, ROLES.SITE_MODERATOR]), listAllClubs);
 
-// Create a new club - Restricted to Admin and Site Moderator
+// Create a new club - Restricted to xxAdmin and Site Moderator
 router
   .route("/")
-  .post(protect, authorize(ROLES.ADMIN, ROLES.SITE_MODERATOR), createClub);
+  .post(protect([ROLES.ADMIN, ROLES.SITE_MODERATOR]), createClub);
 
 // Get club details - Visible to Club members and higher roles
 router

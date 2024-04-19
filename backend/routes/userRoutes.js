@@ -24,7 +24,6 @@ const {
   logout,
 } = require("../controllers/userController");
 const { ADMIN_LEVEL_ROLES } = require("../config/general");
-const protectInternal = require("../middleware/authInternalMiddleware");
 
 // create user in admin table
 router.post(

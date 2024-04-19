@@ -8,6 +8,7 @@ const multer = require("multer");
 const { GridFsStorage } = require("multer-gridfs-storage");
 const path = require("path");
 const crypto = require("crypto");
+const { snakeCase } = require("lodash");
 
 let gridfsBucket;
 
@@ -115,30 +116,34 @@ const getReadStream = asyncHandler(async (filename) => {
 });
 
 const createSeedAdmin = async () => {
-  const existingAdminCount = await User.count({ role: ROLES.ADMIN });
-  if (existingAdminCount === 0) {
-    console.log("No admins found, creating a seed admin");
+  const rolesToSeed = [ROLES.ADMIN, ROLES.CLUB_OWNER];
+  for (const role of rolesToSeed) {
+    const existingAdminCount = await User.count({ role });
+    console.log(`Found ${existingAdminCount} ${role}`);
+    if (existingAdminCount === 0) {
+      console.log(`No ${role} found, creating a seed admin`);
 
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(
-      process.env.SEED_ADMIN_PASSWORD,
-      salt
-    );
-    const user = {
-      name: process.env.SEED_ADMIN_NAME,
-      email: process.env.SEED_ADMIN_EMAIL,
-      phone: process.env.SEED_ADMIN_PHONE,
-      role: ROLES.ADMIN,
-      password: hashedPassword,
-      active: true,
-    };
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(
+        process.env.SEED_ADMIN_PASSWORD,
+        salt
+      );
+      const user = {
+        name: role,
+        email: `${snakeCase(role)}@appx.com`,
+        phone: process.env.SEED_ADMIN_PHONE,
+        role: role,
+        password: hashedPassword,
+        active: true,
+      };
 
-    const createdUser = await User.create(user);
-    console.log(
-      "Seed admin created => ",
-      createdUser.person,
-      createdUser.email
-    );
+      const createdUser = await User.create(user);
+      console.log(
+        `Seed ${role} created => `,
+        createdUser.name,
+        createdUser.email
+      );
+    }
   }
 };
 

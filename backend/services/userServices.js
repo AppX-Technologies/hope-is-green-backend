@@ -17,7 +17,6 @@ const {
 
 const { HttpError } = require("../middleware/errorMiddleware");
 const { v4: uuid } = require("uuid");
-const { syncUserWithMainAppService } = require("./userSyncServices");
 
 const createUserService = asyncHandler(async (userObj) => {
   const { email } = userObj;
@@ -43,7 +42,6 @@ const createUserService = asyncHandler(async (userObj) => {
     },
     email
   );
-  syncUserWithMainAppService(createdUser.toObject());
   return createdUser.toObject();
 });
 
@@ -262,7 +260,6 @@ const changePasswordService = asyncHandler(
       { password: newPasswordHashed },
       { new: true }
     );
-    syncUserWithMainAppService(updatedUser.toObject());
     return updatedUser.toObject();
   }
 );
@@ -293,7 +290,6 @@ const resetPasswordService = asyncHandler(
       { password: newPasswordHashed, resetPasswordKeyExpiry },
       { new: true }
     );
-    syncUserWithMainAppService(updatedUser.toObject());
     return updatedUser.toObject();
   }
 );

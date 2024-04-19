@@ -15,9 +15,6 @@ const {
 } = require("../services/userServices");
 
 const { sanitize } = require("../utils/responseSanitizer");
-const {
-  getAssignedContactEmailsService,
-} = require("../services/userSyncServices");
 
 const createUser = asyncHandler(async (req, res) =>
   res
@@ -35,10 +32,6 @@ const getUsers = asyncHandler(async (req, res) => {
     sanitize(user, "User", req.user.roles)
   );
   res.status(200).json(userResult);
-});
-
-const getAssignedContactEmails = asyncHandler(async (req, res) => {
-  res.status(200).json(await getAssignedContactEmailsService(req.body));
 });
 
 const checkCanAccessContactEmail = asyncHandler(async (req, res) => {
@@ -144,7 +137,6 @@ module.exports = {
   resetPassword,
   deleteUser,
   getUsers,
-  getAssignedContactEmails,
   checkCanAccessContactEmail,
   getMe,
   getUserByResetPasswordKey,

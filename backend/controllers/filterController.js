@@ -1,5 +1,4 @@
 const asyncHandler = require("express-async-handler");
-const { searchFilterService } = require("../services/searchServices");
 
 const {
   createFilterService,
@@ -9,9 +8,7 @@ const {
 } = require("../services/filterServices");
 
 const searchFilters = asyncHandler(async (req, res) =>
-  res
-    .status(200)
-    .json(await searchFilterService({ ...req.body, user: req?.user }))
+  res.status(200).json([])
 );
 
 const createFilter = asyncHandler(async (req, res) => {
