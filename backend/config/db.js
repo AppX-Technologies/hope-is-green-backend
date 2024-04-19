@@ -118,7 +118,7 @@ const getReadStream = asyncHandler(async (filename) => {
 const createSeedAdmin = async () => {
   const rolesToSeed = [ROLES.ADMIN, ROLES.CLUB_OWNER];
   for (const role of rolesToSeed) {
-    const existingAdminCount = await User.count({ role });
+    const existingAdminCount = await User.count({ roles: role });
     console.log(`Found ${existingAdminCount} ${role}`);
     if (existingAdminCount === 0) {
       console.log(`No ${role} found, creating a seed admin`);
@@ -132,7 +132,7 @@ const createSeedAdmin = async () => {
         name: role,
         email: `${snakeCase(role)}@appx.com`,
         phone: process.env.SEED_ADMIN_PHONE,
-        role: role,
+        roles: [role],
         password: hashedPassword,
         active: true,
       };
