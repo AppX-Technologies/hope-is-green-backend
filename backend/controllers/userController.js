@@ -51,7 +51,7 @@ const getUserByResetPasswordKey = asyncHandler(async (req, res) => {
 const register = asyncHandler(async (req, res) => {
   const registeredUser = await registerService(req.body);
   res
-    .cookie("user-token-crm", registeredUser.token, {
+    .cookie("user-token", registeredUser.token, {
       httpOnly: true,
       secure: true, // Use this only if you're using HTTPS, which you should be
       sameSite: "strict", // This helps protect against CSRF
@@ -63,7 +63,7 @@ const register = asyncHandler(async (req, res) => {
 const login = asyncHandler(async (req, res) => {
   const loggedInUser = await loginService(req.body);
   res
-    .cookie("user-token-crm", loggedInUser.token, {
+    .cookie("user-token", loggedInUser.token, {
       httpOnly: true,
       secure: true, // Use this only if you're using HTTPS, which you should be
       sameSite: "strict", // This helps protect against CSRF
@@ -73,8 +73,8 @@ const login = asyncHandler(async (req, res) => {
 });
 
 const logout = asyncHandler(async (req, res) => {
-  // Clear the "user-token-crm" cookie
-  res.clearCookie("user-token-crm", {
+  // Clear the "user-token" cookie
+  res.clearCookie("user-token", {
     httpOnly: true,
     secure: true, // Use this only if you're using HTTPS
     sameSite: "strict", // This helps protect against CSRF
