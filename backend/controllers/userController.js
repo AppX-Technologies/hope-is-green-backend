@@ -53,7 +53,7 @@ const register = asyncHandler(async (req, res) => {
   res
     .cookie("user-token", registeredUser.token, {
       httpOnly: true,
-      secure: true, // Use this only if you're using HTTPS, which you should be
+      secure: false, // Use this only if you're using HTTPS, which you should be
       sameSite: "strict", // This helps protect against CSRF
     })
     .status(200)
@@ -65,7 +65,7 @@ const login = asyncHandler(async (req, res) => {
   res
     .cookie("user-token", loggedInUser.token, {
       httpOnly: true,
-      secure: true, // Use this only if you're using HTTPS, which you should be
+      secure: false, // Use this only if you're using HTTPS, which you should be
       sameSite: "strict", // This helps protect against CSRF
     })
     .status(200)
@@ -76,7 +76,7 @@ const logout = asyncHandler(async (req, res) => {
   // Clear the "user-token" cookie
   res.clearCookie("user-token", {
     httpOnly: true,
-    secure: true, // Use this only if you're using HTTPS
+    secure: false, // Use this only if you're using HTTPS
     sameSite: "strict", // This helps protect against CSRF
   });
 
