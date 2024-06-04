@@ -116,7 +116,7 @@ const getReadStream = asyncHandler(async (filename) => {
 });
 
 const createSeedAdmin = async () => {
-  const rolesToSeed = [ROLES.ADMIN, ROLES.CLUB_OWNER];
+  const rolesToSeed = [ROLES.ADMIN, ROLES.CLUB_OWNER, ROLES.CLUB_MEMBER];
   for (const role of rolesToSeed) {
     const existingAdminCount = await User.count({ roles: role });
     console.log(`Found ${existingAdminCount} ${role}`);
